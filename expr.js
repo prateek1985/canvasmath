@@ -1,3 +1,18 @@
+/*
+ * cvm.expr
+ *
+ * Defines all the types of Expression prototypes, capturing the conceptual
+ * representation of a mathematical expression.  This is the first tier of the
+ * 3-tiered (expr, layout, box) representation hierarchy.  This tier could be
+ * compared to Content MathML.
+ *
+ * A mathematical expression is represented as an Expression tree where each
+ * node is a subexpression.
+ *
+ * Expression prototypes also have a number of methods that allow navigation
+ * and mutation of the expression
+ */
+
 if (window.cvm === undefined) {
     cvm = {};
 }

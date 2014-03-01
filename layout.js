@@ -1,3 +1,22 @@
+/*
+ * cvm.layout
+ *
+ * Defines all the types of Layout prototypes, representing the abstract layout
+ * of an expression, the second tier of the representation hierarchy.  This
+ * tier could be compared to Presentation MathML.
+ * 
+ * Expression nodes have a .layout() method which builds an abstract layout
+ * tree made of instances of the Layout prototypes defined here.  In turn,
+ * Layout nodes have a .box() method which builds a concrete layout tree
+ * ('Box tree').  The Box tree knows how to render itself on a canvas.
+ *
+ * Another important notion is that when an Expression node creates a
+ * Layout node, it is able to register itself with it via the .bindExpr()
+ * method of the Layout node.  This means that the Layout node can 'feed back'
+ * to the Expression node that created it - this mechanism is used for
+ * user interaction with the graphical representation of an Expression node.
+ */
+
 if (window.cvm === undefined) {
     cvm = {};
 }

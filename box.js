@@ -1,3 +1,20 @@
+/*
+ * cvm.box
+ *
+ * Defines all the types of Box prototypes, representing the concrete layout of
+ * an expression, the third tier of the representation hierarchy.
+ *
+ * Layout nodes have a .box() method which creates a Box tree that can be drawn
+ * on a canvas via its .drawOnCanvas(ctx, x, y) method.  Box nodes are also
+ * able to report whether they contain certain coordinates via the .contains()
+ * method and .pushContainer() method.
+ *
+ * Another important notion is that when an Layout node creates a
+ * Box node, it is able to register itself with it via the .bindLayout()
+ * method of the Box node.  This means that the Box node can 'feed back'
+ * to the Layout node that created it - this mechanism is used for
+ * user interaction with the graphical representation of an Expression node.
+ */
 if (window.cvm === undefined) {
     cvm = {};
 }
