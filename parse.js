@@ -270,7 +270,6 @@ var infixBinaryOps = {
     "^": operations.pow,
     "(": operations.multByBracket,
     "[": operations.openArgList,
-    "{": operations.openCoordsList,
     "=": operations.addRelation('eq'),
     "<": operations.addRelation('lt'),
     ">": operations.addRelation('gt'),
@@ -294,6 +293,7 @@ var prefixUnaryOps = {
     "-+": operations.prefixop(expr.minusPlus),
     "not": operations.prefixop(expr.not),
     "(": operations.prefixop(expr.brackets),
+    "{": operations.openCoordsList,
     "d.": operations.prefixop(expr.differential),
     "from": operations.fromOp,
     "to": operations.toOp

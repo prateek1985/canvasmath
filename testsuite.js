@@ -30,11 +30,12 @@ var tests = [
     "p or not q",
     "p and q and r",
     "x<y<z",
-    "f[x] = (\n    2x-1 if 0 <= x <= 1\n    else x if 1 < x <=4\n    else 0\n)"
+    "f[x] = (\n    2x-1 if 0 <= x <= 1\n    else x if 1 < x <=4\n    else 0\n)"    
 ];
 
 var nonMathMLTests = [
-    "(\n    x = a cos theta\n    and y = b sin theta\n) if 0 < theta <= 2pi"
+    "(\n    x = a cos theta\n    and y = b sin theta\n) if 0 < theta <= 2pi",
+    "{1/x,2.3}",
 ];
 
 window.addEventListener("load", function () {
