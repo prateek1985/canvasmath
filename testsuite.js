@@ -34,7 +34,8 @@ var tests = [
 ];
 
 var nonMathMLTests = [
-    "(\n    x = a cos theta\n    and y = b sin theta\n) if 0 < theta <= 2pi"
+    "(\n    x = a cos theta\n    and y = b sin theta\n) if 0 < theta <= 2pi",
+    "'Vector:'(1+'distance')/(3x*'length')'m/s'"    
 ];
 
 window.addEventListener("load", function () {

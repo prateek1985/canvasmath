@@ -835,6 +835,24 @@ var ArgumentList = {
 };
 ArgumentList = VarLenOperation.specialise(ArgumentList);
 
+var Text = {
+    __name__: "Text",
+    __init__: function (content) {
+        this.content = content || "";
+    },
+    layout: function (layout) {
+        var ltext = layout.text(this.content);
+        var space = layout.hspace(3);
+        var ltrain = layout.train([space, ltext, space]);
+        ltrain.bindExpr(this);
+        return ltrain;
+    },
+    copy: function () {
+        return expr.text(this.content);
+    }
+};
+Text = Expression.specialise(Text);
+
 var Conjunction = {
     __name__: "Conjunction",
     isConjunction: true,
@@ -1637,6 +1655,9 @@ var expr = cvm.expr = {
     argumentList: function (args) {
         return ArgumentList.instanciate(args);
     },
+    text: function (args) {
+        return Text.instanciate(args);
+    }, 
     applyFunction: function (f, arglist) {
         return FunctionApplication.instanciate(f, arglist);
     },
