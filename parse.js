@@ -92,7 +92,13 @@ var operations = {
         var func = expr.applyFunction(e.copy(), expr.argumentList([rhs]));
         e.parent.replaceChild(e, func);
         return rhs;
-    },
+    },    
+    openCoordsList: function (e) {
+        var rhs = expr.editExpr();
+        var func =  expr.coordsList([rhs]);
+        e.parent.replaceChild(e, func);
+        return rhs;
+    },    
     addprefixop: function (maker) {
         return function (e) {
             var rhs = expr.editExpr();
@@ -147,6 +153,15 @@ var operations = {
         }
         return e;
     },
+    closeCoordsList: function (e) {
+        var p;
+        for (p = e.parent; !p.isRoot; p = p.parent) {
+            if (p.insertAfterInRow || p.insertRowAfter) {
+                return p.parent;
+            }
+        }
+        return e;
+    },    
     factorial: function (e) {
         var p = e.parent;
         var fac_e = expr.factorial(e.copy());
@@ -255,6 +270,7 @@ var infixBinaryOps = {
     "^": operations.pow,
     "(": operations.multByBracket,
     "[": operations.openArgList,
+    "{": operations.openCoordsList,
     "=": operations.addRelation('eq'),
     "<": operations.addRelation('lt'),
     ">": operations.addRelation('gt'),
@@ -286,6 +302,7 @@ var prefixUnaryOps = {
 var postfixUnaryOps = {
     ")": operations.closeBracket,
     "]": operations.closeArgList,
+    "}": operations.closeCoordsList,
     "!": operations.factorial,
     "'": operations.differentiate
 };
