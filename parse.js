@@ -82,6 +82,12 @@ var operations = {
     piecewise: function (e, rhs) {
         return operations.binop(expr.Piecewise, e, rhs);
     },
+    label: function (e, rhs) {
+        return operations.binop(expr.LabelledExpr, e, rhs);
+    },
+    units: function (e, rhs) {
+        return operations.binop(expr.ExprWithUnits, e, rhs);
+    },
     multByBracket: function (e) {
         var rhs = expr.editExpr();
         operations.mult(e, expr.brackets(rhs));
@@ -268,7 +274,9 @@ var infixBinaryOps = {
     "and": operations.and,
     "or": operations.or,
     "if": operations.conditional,
-    "else": operations.piecewise
+    "else": operations.piecewise,
+    ":": operations.label,
+    "@": operations.units
 };
 
 var prefixUnaryOps = {
