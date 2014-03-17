@@ -866,6 +866,7 @@ var CoordsList = {
     }
 };
 CoordsList = VarLenOperation.specialise(CoordsList);
+
 var Text = {
     __name__: "Text",
     __init__: function (content, needsFactorSeparator) {
