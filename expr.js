@@ -866,6 +866,81 @@ var CoordsList = {
     }
 };
 CoordsList = VarLenOperation.specialise(CoordsList);
+var Text = {
+    __name__: "Text",
+    __init__: function (content, needsFactorSeparator) {
+        this.content = content || "";
+        this._needsFactorSeparator = needsFactorSeparator;
+    },
+    layout: function (layout) {
+        var ltext = layout.text(this.content);
+        var space = layout.hspace(3);
+        var ltrain = layout.train([space, ltext, space]);
+        ltrain.bindExpr(this);
+        return ltrain;
+    },
+    copy: function () {
+        return expr.text(this.content);
+    },
+    needsFactorSeparator: function () {
+        return true; //this._needsFactorSeparator;
+    }
+};
+Text = Expression.specialise(Text);
+
+var LabelledExpr = {
+    __name__: "LabelledExpr",
+    isLabelledExpression: true,
+    childProperties: ["label", "expr"],
+    vOrder: ["label", "expr"],
+    // subLayout: function (layout, subexpr) {
+    //     // This is to make sure roots are surrounded in brackets.
+    //     // The general rule fails to do this as roots are containers
+    //     var l = Expression.subLayout.call(this, layout, subexpr);
+    //     if (subexpr === this.base && subexpr.isSqrt) {
+    //         l = layout.bracket(l);
+    //     }
+    //     return l;
+    // },
+    layout: function (layout) {
+        var lLayout = layout.ofExpr(this.label);
+        var pLayout = layout.ofExpr(this.expr);
+        var ls = layout.train(lLayout, pLayout);
+        ls.bindExpr(this);
+        return ls;
+    },
+    needsFactorSeparator: function () {
+        return true;
+    }
+};
+LabelledExpr = FixedChildrenExpression.specialise(LabelledExpr);
+
+var ExprWithUnits = {
+    __name__: "ExprWithUnits",
+    isLabelledExpression: true,
+    childProperties: ["expr", "units"],
+    vOrder: ["expr", "units"],
+    // subLayout: function (layout, subexpr) {
+    //     // This is to make sure roots are surrounded in brackets.
+    //     // The general rule fails to do this as roots are containers
+    //     var l = Expression.subLayout.call(this, layout, subexpr);
+    //     if (subexpr === this.base && subexpr.isSqrt) {
+    //         l = layout.bracket(l);
+    //     }
+    //     return l;
+    // },
+    layout: function (layout) {
+        var eLayout = layout.ofExpr(this.expr);
+        var uLayout = layout.ofExpr(this.units);
+        var ls = layout.train(eLayout, uLayout);
+        ls.bindExpr(this);
+        return ls;
+    },
+    needsFactorSeparator: function () {
+        return true;
+    }
+};
+ExprWithUnits = FixedChildrenExpression.specialise(ExprWithUnits);
 
 var Conjunction = {
     __name__: "Conjunction",
@@ -1587,6 +1662,7 @@ var priorities = [
     [Power, 90],
     [Fraction, 80],
     [Product, 50],
+    [ExprWithUnits, 45],
     [SumOf, 40],
     [ProductOf, 40],
     [IntegralOf, 40],
@@ -1596,6 +1672,7 @@ var priorities = [
     [Matrix, 7],
     [ExprWithRelation, 5.1],
     [Equation, 5],
+    [LabelledExpr, 4,7],
     [ConditionalExpression, 4.5],
     [Piecewise, 4.2],
     [Conjunction, 4],
@@ -1638,6 +1715,8 @@ var expr = cvm.expr = {
     Piecewise: Piecewise,
     Conjunction: Conjunction,
     Disjunction: Disjunction,
+    LabelledExpr: LabelledExpr,
+    ExprWithUnits: ExprWithUnits,
 
     number: function (n) {
         return Number_.instanciate(n);
@@ -1672,6 +1751,9 @@ var expr = cvm.expr = {
     coordsList: function (args) {
         return CoordsList.instanciate(args);
     },    
+    text: function (args) {
+        return Text.instanciate(args);
+    }, 
     applyFunction: function (f, arglist) {
         return FunctionApplication.instanciate(f, arglist);
     },

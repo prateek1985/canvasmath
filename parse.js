@@ -82,6 +82,12 @@ var operations = {
     piecewise: function (e, rhs) {
         return operations.binop(expr.Piecewise, e, rhs);
     },
+    label: function (e, rhs) {
+        return operations.binop(expr.LabelledExpr, e, rhs);
+    },
+    units: function (e, rhs) {
+        return operations.binop(expr.ExprWithUnits, e, rhs);
+    },
     multByBracket: function (e) {
         var rhs = expr.editExpr();
         operations.mult(e, expr.brackets(rhs));
@@ -283,7 +289,9 @@ var infixBinaryOps = {
     "and": operations.and,
     "or": operations.or,
     "if": operations.conditional,
-    "else": operations.piecewise
+    "else": operations.piecewise,
+    ":": operations.label,
+    "@": operations.units
 };
 
 var prefixUnaryOps = {
@@ -504,6 +512,16 @@ var parser = {
             return target;
         }
     },
+    interpretText: function (input, target) {
+        var textExpr = expr.text(input);
+        if (target.operand) {
+            target.parent.replaceChild(target, target.operand);
+            operations.mult(target.operand, textExpr);
+        } else {
+            target.parent.replaceChild(target, textExpr);
+        }
+        return textExpr;
+    },    
     interpretParameter: function (input, target) {
         var param = expr.parameter(input);
         if (target.operand) {
@@ -608,6 +626,25 @@ var parser = {
             }
             throw "unfinished directive";
         }
+        groups = /^'[^']+'/.exec(input);
+        if (groups) {
+            // We have a text string
+            var text = groups[0];
+            if (text.length === input.length) {
+                // Input is just a string
+                if (ongoing) {
+                    // Input ongoing so keep it as it is
+                    target.content = input;
+                    return target;
+                }
+                // Input finished so replace with a Text expression
+                return this.interpretText(text.substr(1, text.length - 2), target);
+            }
+            // There is more after the string so interpret the rest
+            target = this.interpretText(text.substr(1, text.length - 2), target);
+            input = input.substr(text.length);
+            return this.interpret(target, input, ongoing);
+        }        
         groups = /^\d+(?:\.\d*)?/.exec(input);
         if (groups) {
             // Input starts with a number
